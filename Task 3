@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+#include <vector>
+#include <string>
+
+class AuctionItem {
+public:
+    int itemNumber;
+    std::string description;
+    double reservePrice;
+    int numberOfBids;
+    double highestBid;
+    int highestBidder;
+    bool sold;
+
+    AuctionItem(int num, std::string desc, double price) :
+        itemNumber(num), description(desc), reservePrice(price), numberOfBids(0), highestBid(0.0), highestBidder(-1), sold(false) {}
+
+    double calculateFee() const {
+        return highestBid * 0.10; // 10% of the final bid
+    }
+
+    void displayItemStatus() const {
+        std::cout << "Item Number: " << itemNumber
+                  << ", Final Bid: $" << highestBid
+                  << (sold ? " (Sold)" : " (Not Sold)") << std::endl;
+    }
+};
+
+int main() {
+    std::vector<AuctionItem> auctionItems = {
+        AuctionItem(1, "Antique Vase", 100.0),
+        AuctionItem(2, "Vintage Watch", 200.0),
+        // Add more items...
+    };
+
+    // Simulate bids for demonstration
+    auctionItems[0].placeBid(101, 110.0); // Example bid that meets reserve price
+    auctionItems[1].placeBid(102, 190.0); // Example bid below reserve price
+
+    double totalFee = 0.0;
+    int soldItems = 0, notMetReserve = 0, noBids = 0;
+
+    for (auto& item : auctionItems) {
+        if (item.numberOfBids > 0) {
+            if (item.highestBid >= item.reservePrice) {
+                item.sold = true;
+                soldItems++;
+                double fee = item.calculateFee();
+                totalFee += fee;
+                std::cout << "Item " << item.itemNumber << " sold for $" << item.highestBid
+                          << " with a fee of $" << fee << std::endl;
+            } else {
+                notMetReserve++;
+                item.displayItemStatus();
+            }
+        } else {
+            noBids++;
+            std::cout << "Item Number " << item.itemNumber << " received no bids." << std::endl;
+        }
+    }
+
+    std::cout << "\nSummary:\n"
+              << "Total Fee from Sold Items: $" << totalFee << std::endl
+              << "Number of Items Sold: " << soldItems << std::endl
+              << "Number of Items Not Meeting Reserve Price: " << notMetReserve << std::endl
+              << "Number of Items with No Bids: " << noBids << std::endl;
+
+    return 0;
+}
