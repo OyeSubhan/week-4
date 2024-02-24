@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+#include <vector>
+#include <string>
+
+class AuctionItem {
+public:
+    int itemNumber;
+    std::string description;
+    double reservePrice;
+    int numberOfBids;
+
+    // Constructor to initialize an AuctionItem
+    AuctionItem(int num, std::string desc, double price) :
+        itemNumber(num), description(desc), reservePrice(price), numberOfBids(0) {}
+};
+
+int main() {
+    std::vector<AuctionItem> auctionItems;
+    
+    // Add at least 10 items to the auction
+    auctionItems.push_back(AuctionItem(1, "Antique Vase", 100.0));
+    auctionItems.push_back(AuctionItem(2, "Vintage Watch", 200.0));
+    // Add more items as needed...
+
+    // Ensure there are at least 10 items
+    if (auctionItems.size() < 10) {
+        std::cout << "Error: There must be at least 10 items in the auction." << std::endl;
+        return 1; // Exit the program with an error code
+    }
+
+    // Display the items for verification
+    std::cout << "Auction Items:" << std::endl;
+    for (const auto& item : auctionItems) {
+        std::cout << "Item Number: " << item.itemNumber
+                  << ", Description: " << item.description
+                  << ", Reserve Price: $" << item.reservePrice
+                  << ", Number of Bids: " << item.numberOfBids << std::endl;
+    }
+
+    return 0;
+}
