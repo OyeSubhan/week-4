@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <limits>
+
+class AuctionItem {
+public:
+    int itemNumber;
+    std::string description;
+    double reservePrice;
+    int numberOfBids;
+    double highestBid;
+    int highestBidder;
+
+    AuctionItem(int num, std::string desc, double price) :
+        itemNumber(num), description(desc), reservePrice(price), numberOfBids(0), highestBid(0.0), highestBidder(-1) {}
+
+    bool placeBid(int buyerNumber, double bidAmount) {
+        if (bidAmount > highestBid) {
+            highestBid = bidAmount;
+            highestBidder = buyerNumber;
+            numberOfBids++;
+            return true;
+        }
+        return false;
+    }
+
+    void displayItem() const {
+        std::cout << "Item Number: " << itemNumber
+                  << ", Description: " << description
+                  << ", Reserve Price: $" << reservePrice
+                  << ", Current Highest Bid: $" << highestBid
+                  << ", Number of Bids: " << numberOfBids << std::endl;
+    }
+};
+
+void displayItems(const std::vector<AuctionItem>& items) {
+    for (const auto& item : items) {
+        item.displayItem();
+    }
+}
+
+int main() {
+    std::vector<AuctionItem> auctionItems = {
+        AuctionItem(1, "Antique Vase", 100.0),
+        AuctionItem(2, "Vintage Watch", 200.0),
+        // Add more items...
+    };
+
+    // Example interaction
+    int choice;
+    do {
+        std::cout << "\nAuction System\n";
+        std::cout << "1. View Items\n";
+        std::cout << "2. Place a Bid\n";
+        std::cout << "3. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                displayItems(auctionItems);
+                break;
+            case 2: {
+                int itemNumber, buyerNumber;
+                double bidAmount;
+                std::cout << "Enter item number: ";
+                std::cin >> itemNumber;
+                std::cout << "Enter your buyer number: ";
+                std::cin >> buyerNumber;
+                std::cout << "Enter your bid amount: ";
+                std::cin >> bidAmount;
+
+                if (itemNumber > 0 && itemNumber <= auctionItems.size()) {
+                    if (auctionItems[itemNumber - 1].placeBid(buyerNumber, bidAmount)) {
+                        std::cout << "Bid placed successfully.\n";
+                    } else {
+                        std::cout << "Bid must be higher than the current highest bid.\n";
+                    }
+                } else {
+                    std::cout << "Invalid item number.\n";
+                }
+                break;
+            }
+            case 3:
+                std::cout << "Exiting auction system.\n";
+                break;
+            default:
+                std::cout << "Invalid choice, please try again.\n";
+        }
+    } while (choice != 3);
+
+    return 0;
+}
